@@ -8,7 +8,7 @@ export default function Footer() {
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
               <span className="text-2xl">🐟</span>
-              <span className="text-xl font-bold text-white">OceanDry</span>
+              <span className="text-base font-bold text-white leading-tight">Optimum Quality Divine Ventures</span>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
               Premium dried seafood sourced from trusted waters around the
@@ -66,7 +66,7 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-4">Contact</h3>
             <ul className="space-y-2 text-sm text-slate-400">
-              <li>Email: orders@oceandry.example</li>
+              <li>Email: orders@optimumquality.example</li>
               <li>We ship internationally</li>
               <li className="pt-2 text-xs">
                 Note: Replace with your real contact details
@@ -76,7 +76,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 pt-8 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-slate-500">
-          <p>© {new Date().getFullYear()} OceanDry. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Optimum Quality Divine Ventures. All rights reserved.</p>
           <p className="text-xs">
             Built for dried seafood businesses · Ready for Stripe payments
           </p>

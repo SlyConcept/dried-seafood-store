@@ -1,4 +1,4 @@
-# OceanDry – Dried Seafood E-Commerce Store
+# Optimum Quality Divine Ventures – Dried Seafood E-Commerce Store
 
 A modern, functional e-commerce website for selling dried seafood. Built with **Next.js**, **TypeScript**, and **Tailwind CSS**. Deployed on **Vercel**.
 
@@ -14,7 +14,7 @@ A modern, functional e-commerce website for selling dried seafood. Built with **
 
 ## Live Site
 
-Check your Vercel dashboard for the live URL (usually `https://dried-seafood-store.vercel.app`).
+**https://dried-seafood-store.vercel.app**
 
 ## Local Development
 
@@ -31,7 +31,7 @@ Open [http://localhost:3000](http://localhost:3000).
 Edit `src/data/products.ts`. Replace Unsplash images with your own product photos.
 
 ### Branding
-- Store name is currently **OceanDry** (search & replace in components).
+- Store name: **Optimum Quality Divine Ventures**
 - Contact email: update in Footer and Contact page.
 
 ### Real payments (Stripe)
@@ -39,9 +39,6 @@ Edit `src/data/products.ts`. Replace Unsplash images with your own product photo
 2. Add `@stripe/stripe-js` and `stripe`.
 3. Create an API route that creates a Stripe Checkout Session.
 4. Redirect from the checkout form to Stripe.
-
-### Order emails
-Connect the checkout form to Resend, Formspree, or your own backend.
 
 ## Project Structure
 
@@ -53,4 +50,4 @@ src/
   data/          → products.ts
 ```
 
-Built for your dried seafood business. Replace placeholder content with your real products, photos, and contact details.
+Built for Optimum Quality Divine Ventures. Replace placeholder content with your real products, photos, and contact details.

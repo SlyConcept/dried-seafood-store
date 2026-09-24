@@ -81,7 +81,7 @@ export default function ContactPage() {
 
       <div className="mt-12 pt-8 border-t border-slate-100 text-sm text-slate-500">
         <p>
-          <strong>Email:</strong> orders@oceandry.example
+          <strong>Email:</strong> orders@optimumquality.example
         </p>
         <p className="mt-1">
           Replace with your real contact email and phone number.

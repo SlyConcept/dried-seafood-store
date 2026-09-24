@@ -2,11 +2,11 @@ export default function AboutPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
-        About OceanDry
+        About Optimum Quality Divine Ventures
       </h1>
       <div className="prose prose-slate max-w-none space-y-6 text-slate-600 leading-relaxed">
         <p>
-          OceanDry was founded with a simple mission: bring high-quality dried
+          Optimum Quality Divine Ventures was founded with a simple mission: bring high-quality dried
           seafood from trusted sources around the world to kitchens everywhere.
         </p>
         <p>
