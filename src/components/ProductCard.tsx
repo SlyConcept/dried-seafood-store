@@ -1,14 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import type { Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { useState } from "react";
 
+const PLACEHOLDER =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect fill='%23e2e8f0' width='400' height='400'/%3E%3Ctext fill='%2394a3b8' font-family='sans-serif' font-size='18' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ENo image%3C/text%3E%3C/svg%3E";
+
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
+  const [imgSrc, setImgSrc] = useState(product.image || PLACEHOLDER);
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -23,12 +26,13 @@ export default function ProductCard({ product }: { product: Product }) {
       className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-slate-100 flex flex-col"
     >
       <div className="relative aspect-square overflow-hidden bg-slate-100">
-        <Image
-          src={product.image}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={imgSrc}
           alt={product.name}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          onError={() => setImgSrc(PLACEHOLDER)}
+          loading="lazy"
         />
         {!product.inStock && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
@@ -41,7 +45,8 @@ export default function ProductCard({ product }: { product: Product }) {
 
       <div className="p-4 flex flex-col flex-1">
         <p className="text-xs text-cyan-700 font-medium uppercase tracking-wide mb-1">
-          {product.category} · {product.weight}
+          {product.category}
+          {product.weight ? ` · ${product.weight}` : ""}
         </p>
         <h3 className="font-semibold text-slate-900 group-hover:text-cyan-700 transition line-clamp-1">
           {product.name}
