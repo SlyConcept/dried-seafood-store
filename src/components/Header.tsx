@@ -12,8 +12,8 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2 group">
             <span className="text-2xl">🐟</span>
-            <span className="text-xl font-bold text-white tracking-tight group-hover:text-cyan-300 transition">
-              OceanDry
+            <span className="text-sm sm:text-base md:text-lg font-bold text-white tracking-tight group-hover:text-cyan-300 transition leading-tight">
+              Optimum Quality Divine Ventures
             </span>
           </Link>
 

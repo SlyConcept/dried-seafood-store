@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "OceanDry | Premium Dried Seafood",
+  title: "Optimum Quality Divine Ventures | Premium Dried Seafood",
   description:
     "Shop high-quality dried seafood from around the world. Dried fish, shrimp, squid, seaweed and more. Fast international shipping.",
 };
