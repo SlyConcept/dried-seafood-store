@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin-auth";
+import { formatPrice } from "@/lib/money";
 import Link from "next/link";
 
 export default async function AdminOrdersPage() {
@@ -50,7 +51,7 @@ export default async function AdminOrdersPage() {
                     <p className="text-xs text-slate-400">{o.customerPhone || o.customerEmail}</p>
                   </td>
                   <td className="px-4 py-3">{o.items.length}</td>
-                  <td className="px-4 py-3 font-medium">${o.total.toFixed(2)}</td>
+                  <td className="px-4 py-3 font-medium">{formatPrice(o.total)}</td>
                   <td className="px-4 py-3"><span className="text-xs font-medium">{o.paymentStatus}</span></td>
                   <td className="px-4 py-3">
                     <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100">

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin-auth";
+import { formatPrice } from "@/lib/money";
 import Link from "next/link";
 
 export default async function AdminProductsPage() {
@@ -54,7 +55,7 @@ export default async function AdminProductsPage() {
                   </div>
                 </td>
                 <td className="px-4 py-3 text-slate-600">{p.category?.name ?? "—"}</td>
-                <td className="px-4 py-3 font-medium">${p.price.toFixed(2)}</td>
+                <td className="px-4 py-3 font-medium">{formatPrice(p.price)}</td>
                 <td className="px-4 py-3">
                   <span className={p.stock <= p.lowStockThreshold ? "text-red-600 font-medium" : ""}>
                     {p.stock}
@@ -63,19 +64,14 @@ export default async function AdminProductsPage() {
                 <td className="px-4 py-3">
                   <span
                     className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-                      p.isAvailable
-                        ? "bg-green-50 text-green-700"
-                        : "bg-red-50 text-red-700"
+                      p.isAvailable ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"
                     }`}
                   >
                     {p.isAvailable ? "Available" : "Unavailable"}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <Link
-                    href={`/admin/products/${p.id}`}
-                    className="text-cyan-700 hover:underline text-sm"
-                  >
+                  <Link href={`/admin/products/${p.id}`} className="text-cyan-700 hover:underline text-sm">
                     Edit
                   </Link>
                 </td>
