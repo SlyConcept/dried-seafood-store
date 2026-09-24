@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin-auth";
 import Link from "next/link";
-import Image from "next/image";
 
 export default async function AdminProductsPage() {
   await requireAdmin();
@@ -43,9 +42,10 @@ export default async function AdminProductsPage() {
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-slate-100 shrink-0">
-                      {p.image && (
-                        <Image src={p.image} alt="" fill className="object-cover" sizes="40px" />
-                      )}
+                      {p.image ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={p.image} alt="" className="w-full h-full object-cover" />
+                      ) : null}
                     </div>
                     <div>
                       <p className="font-medium text-slate-900">{p.name}</p>
@@ -61,14 +61,21 @@ export default async function AdminProductsPage() {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-                    p.isAvailable ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"
-                  }`}>
+                  <span
+                    className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
+                      p.isAvailable
+                        ? "bg-green-50 text-green-700"
+                        : "bg-red-50 text-red-700"
+                    }`}
+                  >
                     {p.isAvailable ? "Available" : "Unavailable"}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <Link href={`/admin/products/${p.id}`} className="text-cyan-700 hover:underline text-sm">
+                  <Link
+                    href={`/admin/products/${p.id}`}
+                    className="text-cyan-700 hover:underline text-sm"
+                  >
                     Edit
                   </Link>
                 </td>

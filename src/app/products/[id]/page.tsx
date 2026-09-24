@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getStoreProductByIdOrSlug, getStoreProducts } from "@/lib/catalog";
@@ -29,13 +28,11 @@ export default async function ProductDetailPage({
 
       <div className="mt-6 grid md:grid-cols-2 gap-10">
         <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-100">
-          <Image
-            src={product.image}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={product.image || "https://placehold.co/600x600/e2e8f0/94a3b8?text=No+Image"}
             alt={product.name}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority
+            className="absolute inset-0 w-full h-full object-cover"
           />
         </div>
 
