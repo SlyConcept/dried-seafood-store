@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getStoreProductByIdOrSlug, getStoreProducts } from "@/lib/catalog";
+import { formatPrice } from "@/lib/money";
 import ProductCard from "@/components/ProductCard";
 import AddToCartButton from "@/components/AddToCartButton";
 
@@ -43,7 +44,7 @@ export default async function ProductDetailPage({
             <p className="mt-1 text-slate-500">{product.weight}</p>
           )}
           <p className="mt-4 text-2xl font-bold text-slate-900">
-            ${product.price.toFixed(2)}
+            {formatPrice(product.price)}
           </p>
           <p className="mt-6 text-slate-600 leading-relaxed">{product.description}</p>
 

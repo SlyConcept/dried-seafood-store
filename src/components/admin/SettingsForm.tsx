@@ -17,7 +17,7 @@ export default function SettingsForm({
     delivery_fee: initial.delivery_fee || "0",
     free_delivery_threshold: initial.free_delivery_threshold || "0",
     min_order_amount: initial.min_order_amount || "0",
-    currency: initial.currency || "USD",
+    currency: initial.currency || "NGN",
   });
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
@@ -53,10 +53,10 @@ export default function SettingsForm({
     { key: "whatsapp_number", label: "WhatsApp number (with country code)" },
     { key: "contact_email", label: "Contact email" },
     { key: "contact_phone", label: "Phone" },
-    { key: "currency", label: "Currency" },
-    { key: "delivery_fee", label: "Default delivery fee" },
-    { key: "free_delivery_threshold", label: "Free delivery above" },
-    { key: "min_order_amount", label: "Minimum order amount" },
+    { key: "currency", label: "Currency (e.g. NGN)" },
+    { key: "delivery_fee", label: "Default delivery fee (₦)" },
+    { key: "free_delivery_threshold", label: "Free delivery above (₦)" },
+    { key: "min_order_amount", label: "Minimum order amount (₦)" },
   ] as const;
 
   return (
