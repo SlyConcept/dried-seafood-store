@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import ImageUploadField from "./ImageUploadField";
 
 type Category = { id: string; name: string };
 type ProductData = {
@@ -55,11 +56,13 @@ export default function ProductForm({
   const onNameChange = (name: string) => {
     set("name", name);
     if (!initial?.id) {
-      const slug = name
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "");
-      set("slug", slug);
+      set(
+        "slug",
+        name
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "")
+      );
     }
   };
 
@@ -102,31 +105,52 @@ export default function ProductForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-slate-100 p-6 space-y-5 shadow-sm max-w-3xl">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white rounded-xl border border-slate-100 p-6 space-y-5 shadow-sm max-w-3xl"
+    >
       {error && (
-        <div className="bg-red-50 text-red-700 text-sm px-4 py-3 rounded-lg">{error}</div>
+        <div className="bg-red-50 text-red-700 text-sm px-4 py-3 rounded-lg">
+          {error}
+        </div>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-slate-700 mb-1">Product name *</label>
-          <input required value={form.name} onChange={(e) => onNameChange(e.target.value)}
-            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+          <label className="block text-sm font-medium text-slate-700 mb-1">
+            Product name *
+          </label>
+          <input
+            required
+            value={form.name}
+            onChange={(e) => onNameChange(e.target.value)}
+            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          />
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Slug *</label>
-          <input required value={form.slug} onChange={(e) => set("slug", e.target.value)}
-            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+          <input
+            required
+            value={form.slug}
+            onChange={(e) => set("slug", e.target.value)}
+            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          />
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">SKU</label>
-          <input value={form.sku} onChange={(e) => set("sku", e.target.value)}
-            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+          <input
+            value={form.sku}
+            onChange={(e) => set("sku", e.target.value)}
+            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          />
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Category</label>
-          <select value={form.categoryId} onChange={(e) => set("categoryId", e.target.value)}
-            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+          <select
+            value={form.categoryId}
+            onChange={(e) => set("categoryId", e.target.value)}
+            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          >
             <option value="">— None —</option>
             {categories.map((c) => (
               <option key={c.id} value={c.id}>{c.name}</option>
@@ -135,43 +159,76 @@ export default function ProductForm({
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Weight / size</label>
-          <input value={form.weight} onChange={(e) => set("weight", e.target.value)} placeholder="e.g. 250g"
-            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+          <input
+            value={form.weight}
+            onChange={(e) => set("weight", e.target.value)}
+            placeholder="e.g. 250g"
+            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Price *</label>
-          <input required type="number" step="0.01" min="0" value={form.price} onChange={(e) => set("price", e.target.value)}
-            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+          <label className="block text-sm font-medium text-slate-700 mb-1">Price (₦) *</label>
+          <input
+            required
+            type="number"
+            step="1"
+            min="0"
+            value={form.price}
+            onChange={(e) => set("price", e.target.value)}
+            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Discount price</label>
-          <input type="number" step="0.01" min="0" value={form.discountPrice} onChange={(e) => set("discountPrice", e.target.value)}
-            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+          <label className="block text-sm font-medium text-slate-700 mb-1">Discount price (₦)</label>
+          <input
+            type="number"
+            step="1"
+            min="0"
+            value={form.discountPrice}
+            onChange={(e) => set("discountPrice", e.target.value)}
+            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          />
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Stock *</label>
-          <input required type="number" min="0" value={form.stock} onChange={(e) => set("stock", e.target.value)}
-            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+          <input
+            required
+            type="number"
+            min="0"
+            value={form.stock}
+            onChange={(e) => set("stock", e.target.value)}
+            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          />
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Low-stock threshold</label>
-          <input type="number" min="0" value={form.lowStockThreshold} onChange={(e) => set("lowStockThreshold", e.target.value)}
-            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+          <input
+            type="number"
+            min="0"
+            value={form.lowStockThreshold}
+            onChange={(e) => set("lowStockThreshold", e.target.value)}
+            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          />
         </div>
-        <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-slate-700 mb-1">Image URL</label>
-          <input value={form.image} onChange={(e) => set("image", e.target.value)} placeholder="https://..."
-            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
-        </div>
+        <ImageUploadField value={form.image} onChange={(url) => set("image", url)} />
         <div className="sm:col-span-2">
           <label className="block text-sm font-medium text-slate-700 mb-1">Description *</label>
-          <textarea required rows={4} value={form.description} onChange={(e) => set("description", e.target.value)}
-            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+          <textarea
+            required
+            rows={4}
+            value={form.description}
+            onChange={(e) => set("description", e.target.value)}
+            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          />
         </div>
         <div className="sm:col-span-2">
           <label className="block text-sm font-medium text-slate-700 mb-1">Ingredients</label>
-          <textarea rows={2} value={form.ingredients} onChange={(e) => set("ingredients", e.target.value)}
-            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+          <textarea
+            rows={2}
+            value={form.ingredients}
+            onChange={(e) => set("ingredients", e.target.value)}
+            className="w-full border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          />
         </div>
         <div className="flex items-center gap-6 sm:col-span-2">
           <label className="flex items-center gap-2 text-sm">
