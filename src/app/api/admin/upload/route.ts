@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { put } from "@vercel/blob";
+import sharp from "sharp";
 
 export async function POST(req: Request) {
   try {
@@ -16,9 +17,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
     }
 
-    if (file.size > 4.5 * 1024 * 1024) {
+    if (file.size > 8 * 1024 * 1024) {
       return NextResponse.json(
-        { error: "Image must be under 4.5MB" },
+        { error: "Image must be under 8MB before compression" },
         { status: 400 }
       );
     }
@@ -31,29 +32,57 @@ export async function POST(req: Request) {
       );
     }
 
-    const ext = file.name.split(".").pop() || "jpg";
-    const filename = `products/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const input = Buffer.from(await file.arrayBuffer());
 
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
-      const blob = await put(filename, file, {
-        access: "public",
-        token: process.env.BLOB_READ_WRITE_TOKEN,
-      });
-      return NextResponse.json({ url: blob.url });
+    let output: Buffer;
+    try {
+      output = await sharp(input)
+        .rotate()
+        .resize({
+          width: 1200,
+          height: 1200,
+          fit: "inside",
+          withoutEnlargement: true,
+        })
+        .webp({ quality: 78 })
+        .toBuffer();
+    } catch {
+      if (input.length > 4.5 * 1024 * 1024) {
+        return NextResponse.json(
+          { error: "Could not compress this image. Try JPEG or PNG under 4MB." },
+          { status: 400 }
+        );
+      }
+      output = input;
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const dataUrl = `data:${file.type};base64,${buffer.toString("base64")}`;
+    const filename = `products/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webp`;
+
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      const blob = await put(filename, output, {
+        access: "public",
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+        contentType: "image/webp",
+      });
+      return NextResponse.json({
+        url: blob.url,
+        size: output.length,
+        originalSize: input.length,
+      });
+    }
+
+    const dataUrl = `data:image/webp;base64,${output.toString("base64")}`;
     if (dataUrl.length > 900_000) {
       return NextResponse.json(
-        {
-          error:
-            "Image too large for fallback storage. Connect Vercel Blob or use a smaller image.",
-        },
+        { error: "Image still too large after compression." },
         { status: 400 }
       );
     }
-    return NextResponse.json({ url: dataUrl });
+    return NextResponse.json({
+      url: dataUrl,
+      size: output.length,
+      originalSize: input.length,
+    });
   } catch (e: unknown) {
     console.error("Upload error:", e);
     const msg = e instanceof Error ? e.message : "Upload failed";
