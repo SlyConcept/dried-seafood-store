@@ -21,22 +21,30 @@ export default function SettingsForm({
   });
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setMsg("");
-    const res = await fetch("/api/admin/settings", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    setSaving(false);
-    if (res.ok) {
-      setMsg("Settings saved");
-      router.refresh();
-    } else {
-      setMsg("Failed to save");
+    setError("");
+    try {
+      const res = await fetch("/api/admin/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        setMsg("Settings saved successfully");
+        router.refresh();
+      } else {
+        setError(data.error || `Failed to save (${res.status})`);
+      }
+    } catch {
+      setError("Network error — please try again");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -52,7 +60,10 @@ export default function SettingsForm({
   ] as const;
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-slate-100 p-6 space-y-4 shadow-sm">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white rounded-xl border border-slate-100 p-6 space-y-4 shadow-sm"
+    >
       {fields.map((f) => (
         <div key={f.key}>
           <label className="block text-sm font-medium text-slate-700 mb-1">
@@ -65,7 +76,8 @@ export default function SettingsForm({
           />
         </div>
       ))}
-      {msg && <p className="text-sm text-green-600">{msg}</p>}
+      {msg && <p className="text-sm text-green-600 font-medium">{msg}</p>}
+      {error && <p className="text-sm text-red-600 font-medium">{error}</p>}
       <button
         type="submit"
         disabled={saving}
