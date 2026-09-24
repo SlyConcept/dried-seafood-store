@@ -1,13 +1,14 @@
 import Link from "next/link";
-import { products } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
+import { getFeaturedProducts } from "@/lib/catalog";
 
-export default function HomePage() {
-  const featured = products.slice(0, 4);
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const featured = await getFeaturedProducts(4);
 
   return (
     <div>
-      {/* Hero */}
       <section className="relative bg-slate-900 text-white overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-900/40 via-slate-900 to-slate-900" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
@@ -20,20 +21,19 @@ export default function HomePage() {
               <span className="text-cyan-400">Delivered Fresh</span>
             </h1>
             <p className="mt-6 text-lg text-slate-300 leading-relaxed">
-              From sun-dried anchovies to premium nori and smoked mackerel —
-              carefully selected dried seafood for home cooks and restaurants
-              around the world.
+              Premium dried fish, shrimp, squid, and seaweed sourced from trusted
+              waters. Quality you can taste — shipped worldwide.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
                 href="/products"
-                className="inline-flex items-center justify-center bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-semibold px-8 py-3.5 rounded-lg transition shadow-lg shadow-cyan-500/20"
+                className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-semibold px-6 py-3 rounded-lg transition"
               >
-                Shop All Products
+                Shop Products
               </Link>
               <Link
                 href="/about"
-                className="inline-flex items-center justify-center border border-slate-600 hover:border-slate-400 text-white font-medium px-8 py-3.5 rounded-lg transition"
+                className="border border-slate-600 hover:border-cyan-500 text-white px-6 py-3 rounded-lg transition"
               >
                 Our Story
               </Link>
@@ -42,27 +42,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Trust badges */}
-      <section className="bg-white border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {[
-              { icon: "🌍", title: "International Shipping", desc: "We ship worldwide" },
-              { icon: "✨", title: "Premium Quality", desc: "Carefully selected" },
-              { icon: "📦", title: "Secure Packaging", desc: "Fresh on arrival" },
-              { icon: "🔒", title: "Secure Checkout", desc: "Safe payments" },
-            ].map((item) => (
-              <div key={item.title} className="flex flex-col items-center">
-                <span className="text-2xl mb-2">{item.icon}</span>
-                <p className="font-semibold text-slate-900 text-sm">{item.title}</p>
-                <p className="text-xs text-slate-500 mt-0.5">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured products */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="flex items-end justify-between mb-10">
           <div>
@@ -70,49 +49,57 @@ export default function HomePage() {
               Featured Products
             </h2>
             <p className="mt-2 text-slate-500">
-              Our most popular dried seafood selections
+              Hand-picked dried seafood favorites
             </p>
           </div>
           <Link
             href="/products"
-            className="hidden sm:inline-flex text-cyan-700 hover:text-cyan-800 font-medium text-sm"
+            className="hidden sm:inline text-cyan-700 hover:underline text-sm font-medium"
           >
             View all →
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featured.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {featured.length === 0 ? (
+          <p className="text-slate-500 text-center py-12">
+            Products will appear here once added in the admin panel.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featured.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        )}
 
-        <div className="mt-10 text-center sm:hidden">
-          <Link
-            href="/products"
-            className="inline-flex text-cyan-700 hover:text-cyan-800 font-medium"
-          >
+        <div className="mt-8 text-center sm:hidden">
+          <Link href="/products" className="text-cyan-700 hover:underline text-sm font-medium">
             View all products →
           </Link>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-cyan-50 border-y border-cyan-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
-            Ready to stock your kitchen?
-          </h2>
-          <p className="mt-3 text-slate-600 max-w-xl mx-auto">
-            Browse our full catalog of dried fish, shrimp, squid, seaweed and
-            more. Orders ship worldwide.
-          </p>
-          <Link
-            href="/products"
-            className="mt-8 inline-flex items-center justify-center bg-slate-900 hover:bg-slate-800 text-white font-semibold px-8 py-3.5 rounded-lg transition"
-          >
-            Browse Catalog
-          </Link>
+      <section className="bg-slate-50 border-y border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid md:grid-cols-3 gap-10">
+          {[
+            {
+              title: "Premium Quality",
+              desc: "Carefully selected dried seafood meeting strict standards for flavor and safety.",
+            },
+            {
+              title: "Worldwide Shipping",
+              desc: "We ship internationally with packaging designed for long-distance delivery.",
+            },
+            {
+              title: "Trusted Sources",
+              desc: "Sourced from reputable waters and processors around the world.",
+            },
+          ].map((item) => (
+            <div key={item.title} className="text-center">
+              <h3 className="font-semibold text-slate-900 text-lg">{item.title}</h3>
+              <p className="mt-2 text-slate-500 text-sm leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
     </div>

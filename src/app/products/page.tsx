@@ -1,14 +1,20 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
-import { products, categories } from "@/data/products";
-import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
-import { Suspense } from "react";
+import ProductCard from "@/components/ProductCard";
+import { getStoreProducts, getStoreCategories } from "@/lib/catalog";
 
-function ProductsContent() {
-  const searchParams = useSearchParams();
-  const category = searchParams.get("category") || "All";
+export const dynamic = "force-dynamic";
+
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}) {
+  const params = await searchParams;
+  const category = params.category || "All";
+  const [products, categories] = await Promise.all([
+    getStoreProducts(),
+    getStoreCategories(),
+  ]);
 
   const filtered =
     category === "All"
@@ -28,11 +34,11 @@ function ProductsContent() {
         {categories.map((cat) => (
           <Link
             key={cat}
-            href={cat === "All" ? "/products" : `/products?category=${cat}`}
+            href={cat === "All" ? "/products" : `/products?category=${encodeURIComponent(cat)}`}
             className={`px-4 py-2 rounded-full text-sm font-medium transition ${
               category === cat
                 ? "bg-slate-900 text-white"
-                : "bg-white text-slate-600 border border-slate-200 hover:border-slate-400"
+                : "bg-white border border-slate-200 text-slate-600 hover:border-cyan-500"
             }`}
           >
             {cat}
@@ -41,24 +47,16 @@ function ProductsContent() {
       </div>
 
       {filtered.length === 0 ? (
-        <p className="text-slate-500 text-center py-20">
-          No products found in this category.
+        <p className="text-center text-slate-500 py-16">
+          No products in this category yet. Add them from the admin panel.
         </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filtered.map((product) => (
-            <ProductCard key={product.id} product={product} />
+          {filtered.map((p) => (
+            <ProductCard key={p.id} product={p} />
           ))}
         </div>
       )}
     </div>
-  );
-}
-
-export default function ProductsPage() {
-  return (
-    <Suspense fallback={<div className="py-20 text-center">Loading...</div>}>
-      <ProductsContent />
-    </Suspense>
   );
 }
