@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
+import { formatPrice } from "@/lib/money";
 import { useState } from "react";
 
 const PLACEHOLDER =
@@ -57,7 +58,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <div className="mt-4 flex items-center justify-between">
           <span className="text-lg font-bold text-slate-900">
-            ${product.price.toFixed(2)}
+            {formatPrice(product.price)}
           </span>
           <button
             onClick={handleAdd}
